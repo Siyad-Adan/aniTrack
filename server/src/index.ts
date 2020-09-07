@@ -19,10 +19,6 @@ const mount = async (app: Application) => {
   app.listen(process.env.PORT, () => {
     console.log(`server running on http://localhost:${process.env.PORT}`);
   });
-
-  const listings = await db.animes.find({}).toArray();
-
-  console.log(listings);
 };
 
 try {
