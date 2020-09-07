@@ -1,4 +1,4 @@
-import { Anime, User, Database } from "../../../lib";
+import { User, Database } from "../../../lib";
 import { IResolvers } from "apollo-server-express";
 import { ObjectId } from "mongodb";
 
