@@ -1,5 +1,8 @@
+import { Collection, ObjectId } from "mongodb";
+
 export interface Anime {
-  id: string;
+  _id: ObjectId;
+  mal_id: number;
   image: string;
   title: string;
   airing: boolean;
@@ -7,4 +10,8 @@ export interface Anime {
   type: string;
   episodes: number;
   rated: string;
+}
+
+export interface Database {
+  animes: Collection<Anime>;
 }
