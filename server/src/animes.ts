@@ -1,7 +1,9 @@
-import { Anime } from "./interfaces";
+import { Anime } from "./lib";
+import { ObjectId } from "mongodb";
 export const animes: Anime[] = [
   {
-    id: "20",
+    _id: new ObjectId("507f1f77bcf86cd799439011"),
+    mal_id: 20,
     image:
       "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
     title: "Naruto",
