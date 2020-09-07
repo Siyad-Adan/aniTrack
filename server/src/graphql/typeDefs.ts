@@ -3,6 +3,7 @@ import { gql } from "apollo-server-express";
 export const typeDefs = gql`
   type Anime {
     id: ID!
+    mal_id: Int!
     image: String!
     title: String!
     airing: Boolean!
@@ -20,7 +21,7 @@ export const typeDefs = gql`
   type Mutation {
     deleteAnime(id: ID!): Anime!
     addAnime(
-      id: String!
+      mal_id: String!
       image: String!
       title: String!
       airing: Boolean!
