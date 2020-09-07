@@ -1,8 +1,13 @@
 import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
-  type Anime {
+  type User {
     id: ID!
+    username: String!
+    animes: [Anime]!
+  }
+
+  type Anime {
     mal_id: Int!
     image: String!
     title: String!
@@ -15,13 +20,14 @@ export const typeDefs = gql`
   }
 
   type Query {
-    animes: [Anime!]!
+    userAnimes(id: ID!): [User!]!
   }
 
   type Mutation {
-    deleteAnime(id: ID!): Anime!
+    deleteAnime(id: ID!, mal_id: Int!): Int!
     addAnime(
-      mal_id: String!
+      id: ID!
+      mal_id: Int!
       image: String!
       title: String!
       airing: Boolean!
@@ -29,6 +35,6 @@ export const typeDefs = gql`
       type: String!
       episodes: Int!
       rated: String!
-    ): Anime!
+    ): Int!
   }
 `;
