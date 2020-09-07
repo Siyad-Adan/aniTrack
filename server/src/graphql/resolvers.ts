@@ -1,41 +1,37 @@
-import { animes } from "../animes";
-import { Anime } from "../lib";
+import { Anime, Database } from "../lib";
 import { IResolvers } from "apollo-server-express";
 import { ObjectId } from "mongodb";
 
 export const resolvers: IResolvers = {
   Query: {
-    animes: (): Array<Anime> => {
-      return animes;
+    animes: async (
+      _root: undefined,
+      _args: undefined,
+      { db }: { db: Database }
+    ): Promise<Anime[]> => {
+      return await db.animes.find({}).toArray();
     },
   },
   Mutation: {
-    deleteAnime: (_root: undefined, { _id }: { _id: ObjectId }): Anime => {
-      for (let i = 0; i < animes.length; i++) {
-        if (animes[i]._id === _id) {
-          return animes.splice(i, 1)[0];
-        }
-      }
-
-      throw new Error("failed to delete anime");
-    },
-    addAnime: (
+    deleteAnime: async (
       _root: undefined,
-      {
-        _id,
-        mal_id,
-        image,
-        title,
-        airing,
-        synopsis,
-        type,
-        episodes,
-        rated,
-      }: Anime
-    ): Anime => {
+      { id }: { id: string },
+      { db }: { db: Database }
+    ): Promise<Anime> => {
+      const deleteResult = await db.animes.findOneAndDelete({
+        _id: new ObjectId(id),
+      });
+      if (!deleteResult.value)
+        throw new Error(`Deletion of anime with id ${id} failed`);
+      return deleteResult.value;
+    },
+    addAnime: async (
+      _root: undefined,
+      { mal_id, image, title, airing, synopsis, type, episodes, rated }: Anime,
+      { db }: { db: Database }
+    ): Promise<Anime | null> => {
       try {
         const newAnime = {
-          _id,
           mal_id,
           image,
           title,
@@ -46,12 +42,17 @@ export const resolvers: IResolvers = {
           rated,
         };
 
-        animes.push(newAnime);
+        const addResult = await db.animes.insert(newAnime);
 
-        return newAnime;
+        return db.animes.findOne({
+          _id: addResult.insertedIds[0],
+        });
       } catch (err) {
-        throw new Error("Failed to add anime");
+        throw new Error(`Failed to add anime : error ${err}`);
       }
     },
+  },
+  Anime: {
+    id: (anime: Anime): string => anime._id.toString(),
   },
 };
