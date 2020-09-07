@@ -2,7 +2,7 @@ require("dotenv").config();
 
 import { connectDatabase } from "../src/database";
 
-import { Anime } from "../src/lib/";
+import { User } from "../src/lib/";
 import { ObjectId } from "mongodb";
 
 const seed = async () => {
@@ -11,76 +11,65 @@ const seed = async () => {
 
     const db = await connectDatabase();
 
-    const animes: Anime[] = [
+    const users: User[] = [
       {
         _id: new ObjectId(),
-        mal_id: 20,
-        image:
-          "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
-        title: "Naruto",
-        airing: false,
-        synopsis:
-          "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
-        type: "TV",
-        episodes: 220,
-        rated: "PG-13",
+        username: "Jimbo",
+        animes: [
+          {
+            mal_id: 20,
+            image:
+              "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
+            title: "Naruto",
+            airing: false,
+            synopsis:
+              "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
+            type: "TV",
+            episodes: 220,
+            rated: "PG-13",
+          },
+        ],
       },
       {
         _id: new ObjectId(),
-        mal_id: 21,
-        image:
-          "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
-        title: "Naruto 2",
-        airing: false,
-        synopsis:
-          "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
-        type: "TV",
-        episodes: 220,
-        rated: "PG-13",
+        username: "Bobby",
+        animes: [
+          {
+            mal_id: 20,
+            image:
+              "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
+            title: "Naruto",
+            airing: false,
+            synopsis:
+              "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
+            type: "TV",
+            episodes: 220,
+            rated: "PG-13",
+          },
+        ],
       },
       {
         _id: new ObjectId(),
-        mal_id: 22,
-        image:
-          "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
-        title: "Naruto 3",
-        airing: false,
-        synopsis:
-          "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
-        type: "TV",
-        episodes: 220,
-        rated: "PG-13",
-      },
-      {
-        _id: new ObjectId(),
-        mal_id: 23,
-        image:
-          "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
-        title: "Naruto 4",
-        airing: false,
-        synopsis:
-          "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
-        type: "TV",
-        episodes: 220,
-        rated: "PG-13",
-      },
-      {
-        _id: new ObjectId(),
-        mal_id: 24,
-        image:
-          "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
-        title: "Naruto 5",
-        airing: false,
-        synopsis:
-          "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
-        type: "TV",
-        episodes: 220,
-        rated: "PG-13",
+        username: "Ricky",
+        animes: [
+          {
+            mal_id: 20,
+            image:
+              "https://cdn.myanimelist.net/images/anime/13/17405.jpg?s=59241469eb470604a792add6fbe7cce6",
+            title: "Naruto",
+            airing: false,
+            synopsis:
+              "Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi'...",
+            type: "TV",
+            episodes: 220,
+            rated: "PG-13",
+          },
+        ],
       },
     ];
 
-    for (const anime of animes) {
-      await db.animes.insertOne(anime);
+    for (const user of users) {
+      await db.users.insertOne(user);
     }
 
     console.log(`[seed] : success`);
