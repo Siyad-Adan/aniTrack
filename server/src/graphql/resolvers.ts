@@ -1,6 +1,7 @@
 import { animes } from "../animes";
-import { Anime } from "../interfaces";
+import { Anime } from "../lib";
 import { IResolvers } from "apollo-server-express";
+import { ObjectId } from "mongodb";
 
 export const resolvers: IResolvers = {
   Query: {
@@ -9,9 +10,9 @@ export const resolvers: IResolvers = {
     },
   },
   Mutation: {
-    deleteAnime: (_root: undefined, { id }: { id: string }): Anime => {
+    deleteAnime: (_root: undefined, { _id }: { _id: ObjectId }): Anime => {
       for (let i = 0; i < animes.length; i++) {
-        if (animes[i].id === id) {
+        if (animes[i]._id === _id) {
           return animes.splice(i, 1)[0];
         }
       }
@@ -20,11 +21,22 @@ export const resolvers: IResolvers = {
     },
     addAnime: (
       _root: undefined,
-      { id, image, title, airing, synopsis, type, episodes, rated }: Anime
+      {
+        _id,
+        mal_id,
+        image,
+        title,
+        airing,
+        synopsis,
+        type,
+        episodes,
+        rated,
+      }: Anime
     ): Anime => {
       try {
         const newAnime = {
-          id,
+          _id,
+          mal_id,
           image,
           title,
           airing,
