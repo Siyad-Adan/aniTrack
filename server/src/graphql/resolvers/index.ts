@@ -1,4 +1,4 @@
 import merge from "lodash.merge";
-import { animeResolvers } from "./Anime";
+import { userResolvers } from "./User";
 
-export const resolvers = merge(animeResolvers);
+export const resolvers = merge(userResolvers);
