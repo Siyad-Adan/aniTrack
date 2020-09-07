@@ -8,11 +8,10 @@ export const connectDatabase = async (): Promise<Database> => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
   const db = client.db("main");
 
   return {
     animes: db.collection("animes"),
   };
 };
-
-process.env;
