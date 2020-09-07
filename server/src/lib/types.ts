@@ -1,5 +1,11 @@
 import { Collection, ObjectId } from "mongodb";
 
+export interface User {
+  _id: ObjectId;
+  username: string;
+  animes: Anime[];
+}
+
 export interface Anime {
   _id: ObjectId;
   mal_id: number;
@@ -13,5 +19,5 @@ export interface Anime {
 }
 
 export interface Database {
-  animes: Collection<Anime>;
+  users: Collection<User>;
 }
