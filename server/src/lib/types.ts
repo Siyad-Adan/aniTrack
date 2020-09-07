@@ -7,7 +7,6 @@ export interface User {
 }
 
 export interface Anime {
-  _id: ObjectId;
   mal_id: number;
   image: string;
   title: string;
