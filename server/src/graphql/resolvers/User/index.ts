@@ -56,9 +56,7 @@ export const userResolvers: IResolvers = {
       },
       { db }: { db: Database }
     ): Promise<number> => {
-      console.log("test");
       try {
-        console.log("test");
         const addResult = await db.users.updateOne(
           { _id: new ObjectId(id) },
           {
@@ -76,7 +74,6 @@ export const userResolvers: IResolvers = {
             },
           }
         );
-        console.log(addResult.result.nModified);
 
         return addResult.result.nModified;
       } catch (err) {
