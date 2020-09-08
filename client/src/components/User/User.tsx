@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { server, useQuery, useMutation } from "../../lib/api";
+import { useQuery, useMutation } from "react-apollo";
+import { gql } from "apollo-boost";
 
 import {
   UserInfoData,
@@ -14,35 +15,55 @@ interface Props {
   title: string;
 }
 
-const USERINFO = `
-query UserAnimes{
-  userAnimes(id: "5f569c5d69573b79b5db51ea"){
-    id
-    username
-    animes{
-      mal_id
-      image
-      title
-      airing
-      synopsis
+const USERINFO = gql`
+  query UserAnimes {
+    userAnimes(id: "5f569c5d69573b79b5db51ea") {
+      id
+      username
+      animes {
+        mal_id
+        image
+        title
+        airing
+        synopsis
+      }
     }
   }
-}
 `;
 
-const DELETEUSERANIME = `
-mutation deleteUserAnime($id: ID!, $mal_id: Int! ){
-    deleteAnime(id: $id, mal_id : $mal_id)
+const DELETEUSERANIME = gql`
+  mutation deleteUserAnime($id: ID!, $mal_id: Int!) {
+    deleteAnime(id: $id, mal_id: $mal_id)
   }
 `;
 
-const ADDUSERANIME = `
-mutation addAnimes($id: ID!, $mal_id: Int!, $image: String!, $title: String!, $airing: Boolean!, $synopsis: String!, $type: String!, $episodes: Int!, $rated: String!){
-  addAnime(id: $id, mal_id: $mal_id, image: $image, title: $title, airing: $airing, synopsis: $synopsis, type: $type, episodes: $episodes, rated: $rated)
-}
+const ADDUSERANIME = gql`
+  mutation addAnimes(
+    $id: ID!
+    $mal_id: Int!
+    $image: String!
+    $title: String!
+    $airing: Boolean!
+    $synopsis: String!
+    $type: String!
+    $episodes: Int!
+    $rated: String!
+  ) {
+    addAnime(
+      id: $id
+      mal_id: $mal_id
+      image: $image
+      title: $title
+      airing: $airing
+      synopsis: $synopsis
+      type: $type
+      episodes: $episodes
+      rated: $rated
+    )
+  }
 `;
 
-export const User: FC<Props> = ({ title, children }) => {
+export const User: FC<Props> = ({ title }) => {
   const { data, refetch, loading, error } = useQuery<UserInfoData>(USERINFO);
 
   const [
@@ -58,7 +79,7 @@ export const User: FC<Props> = ({ title, children }) => {
   ] = useMutation<UserAnimeAddData, UserAnimeAddVariables>(ADDUSERANIME);
 
   const deleteUserAnime = async (id: string, mal_id: number) => {
-    await deleteAnime({ id, mal_id });
+    await deleteAnime({ variables: { id, mal_id } });
 
     refetch();
 
@@ -78,15 +99,17 @@ export const User: FC<Props> = ({ title, children }) => {
 
   const addUserAnime = async () => {
     await addAnime({
-      id: "5f569c5d69573b79b5db51ea",
-      mal_id: 200,
-      image: "Test",
-      title: "Test",
-      airing: false,
-      synopsis: "Test",
-      type: "Test",
-      episodes: 200,
-      rated: "Test",
+      variables: {
+        id: "5f569c5d69573b79b5db51ea",
+        mal_id: 200,
+        image: "Test",
+        title: "Test",
+        airing: false,
+        synopsis: "Test",
+        type: "Test",
+        episodes: 200,
+        rated: "Test",
+      },
     });
 
     const newAnime: Anime = {
@@ -142,9 +165,7 @@ export const User: FC<Props> = ({ title, children }) => {
       {errorItem}
       {deleteAnimeError && <h2>Error Deleting Weeb Anime</h2>}
       {addAnimeError && <h2>Error Adding Weeb Anime</h2>}
-      <h2>
-        {title} {children}
-      </h2>
+      <h2>{title}</h2>
       {loadingItem}
       {deleteAnimeLoading && <h2>Deleting....</h2>}
       {addAnimeLoading && <h2>Adding anime...</h2>}
