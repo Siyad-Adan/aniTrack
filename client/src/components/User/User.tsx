@@ -1,8 +1,7 @@
-import React, { FC, useState, useEffect } from "react";
-import { server } from "../../lib/api";
+import React, { FC } from "react";
+import { server, useQuery } from "../../lib/api";
 
 import {
-  UserInfo,
   UserInfoData,
   UserAnimeDeleteData,
   UserAnimeDeleteVariables,
@@ -10,7 +9,6 @@ import {
   UserAnimeAddVariables,
   Anime,
 } from "./types";
-import { stringify } from "querystring";
 
 interface Props {
   title: string;
@@ -45,20 +43,7 @@ mutation addAnimes($id: ID!, $mal_id: Int!, $image: String!, $title: String!, $a
 `;
 
 export const User: FC<Props> = ({ title, children }) => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    id: "",
-    username: "testing",
-    animes: [],
-  });
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, [userInfo]);
-
-  const fetchUserInfo = async () => {
-    const { data } = await server.fetch<UserInfoData>({ query: USERINFO });
-    setUserInfo(data.userAnimes);
-  };
+  const { data, refetch, loading, error } = useQuery<UserInfoData>(USERINFO);
 
   const deleteUserAnime = async (id: string, mal_id: number) => {
     const { data } = await server.fetch<
@@ -72,18 +57,20 @@ export const User: FC<Props> = ({ title, children }) => {
       },
     });
 
-    const userInfoAnimesTemp: Anime[] = userInfo.animes;
+    refetch();
 
-    userInfoAnimesTemp.splice(
-      userInfoAnimesTemp.findIndex((anime) => anime.mal_id === mal_id),
-      1
-    );
+    // const userInfoAnimesTemp: Anime[] = userInfo.animes;
 
-    setUserInfo({
-      id: id,
-      username: userInfo.username,
-      animes: userInfoAnimesTemp,
-    });
+    // userInfoAnimesTemp.splice(
+    //   userInfoAnimesTemp.findIndex((anime) => anime.mal_id === mal_id),
+    //   1
+    // );
+
+    // setUserInfo({
+    //   id: id,
+    //   username: userInfo.username,
+    //   animes: userInfoAnimesTemp,
+    // });
   };
 
   const addUserAnime = async () => {
@@ -116,15 +103,19 @@ export const User: FC<Props> = ({ title, children }) => {
       rated: "Test",
     };
 
-    const newAnimeList: Anime[] = userInfo.animes;
-    newAnimeList.push(newAnime);
+    // const newAnimeList: Anime[] = userInfo.animes;
+    // newAnimeList.push(newAnime);
 
-    setUserInfo({
-      id: userInfo.id,
-      username: userInfo.username,
-      animes: newAnimeList,
-    });
+    // setUserInfo({
+    //   id: userInfo.id,
+    //   username: userInfo.username,
+    //   animes: newAnimeList,
+    // });
+
+    refetch();
   };
+
+  const userInfo = data ? data.userAnimes : null;
 
   const userData = userInfo ? (
     <div>
@@ -146,13 +137,17 @@ export const User: FC<Props> = ({ title, children }) => {
     </div>
   ) : null;
 
+  const loadingItem = loading ? <h2>Loading...</h2> : "";
+  const errorItem = error ? <h2>SOMETHING WENT WRONG ! :(</h2> : "";
+
   return (
     <div>
+      {errorItem}
       <h2>
         {title} {children}
       </h2>
+      {loadingItem}
       {userData}
-      <button onClick={fetchUserInfo}> User Info </button>
       <button onClick={addUserAnime}> Add Anime </button>
     </div>
   );
