@@ -3,13 +3,13 @@ import { useQuery, useMutation } from "react-apollo";
 import { gql } from "apollo-boost";
 
 import {
-  UserInfoData,
-  UserAnimeDeleteData,
-  UserAnimeDeleteVariables,
-  UserAnimeAddData,
-  UserAnimeAddVariables,
-  Anime,
-} from "./types";
+  UserAnimes_userAnimes as UserInfoData,
+  deleteUserAnime as UserAnimeDeleteData,
+  deleteUserAnimeVariables as UserAnimeDeleteVariables,
+  addAnimes as UserAnimeAddData,
+  addAnimesVariables as UserAnimeAddVariables,
+  UserAnimes_userAnimes_animes as Anime,
+} from "./__generated__";
 
 interface Props {
   title: string;
@@ -26,6 +26,9 @@ const USERINFO = gql`
         title
         airing
         synopsis
+        episodes
+        rated
+        type
       }
     }
   }
@@ -112,17 +115,6 @@ export const User: FC<Props> = ({ title }) => {
       },
     });
 
-    const newAnime: Anime = {
-      mal_id: 200,
-      image: "Test",
-      title: "Test",
-      airing: false,
-      synopsis: "Test",
-      type: "Test",
-      episodes: 200,
-      rated: "Test",
-    };
-
     // const newAnimeList: Anime[] = userInfo.animes;
     // newAnimeList.push(newAnime);
 
@@ -135,19 +127,17 @@ export const User: FC<Props> = ({ title }) => {
     refetch();
   };
 
-  const userInfo = data ? data.userAnimes : null;
+  const userInfo = data ? data.username : null;
 
   const userData = userInfo ? (
     <div>
-      <p>{userInfo.id ? userInfo.username : ""}</p>
+      <p>{userInfo}</p>
       <ul>
-        {userInfo.animes.map((anime, idx) => {
+        {data!.animes.map((anime, idx) => {
           return (
             <li key={idx}>
-              {anime.synopsis}
-              <button
-                onClick={() => deleteUserAnime(userInfo.id, anime.mal_id)}
-              >
+              {anime!.synopsis}
+              <button onClick={() => deleteUserAnime(data!.id, anime!.mal_id)}>
                 Delete anime
               </button>
             </li>
