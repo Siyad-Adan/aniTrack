@@ -1,12 +1,6 @@
 import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
-  type User {
-    id: ID!
-    username: String!
-    animes: [Anime]!
-  }
-
   type Anime {
     mal_id: Int!
     image: String!
@@ -17,6 +11,12 @@ export const typeDefs = gql`
     episodes: Int!
     rated: String!
     rating: Int!
+  }
+
+  type User {
+    id: ID!
+    username: String!
+    animes: [Anime]!
   }
 
   type Query {
