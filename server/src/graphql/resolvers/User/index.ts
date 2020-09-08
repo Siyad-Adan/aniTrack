@@ -8,12 +8,14 @@ export const userResolvers: IResolvers = {
       _root: undefined,
       { id }: { id: string },
       { db }: { db: Database }
-    ): Promise<User[]> => {
-      return await db.users
+    ): Promise<User> => {
+      const data: User[] = await db.users
         .find({
           _id: new ObjectId(id),
         })
         .toArray();
+
+      return data[0];
     },
   },
   Mutation: {
