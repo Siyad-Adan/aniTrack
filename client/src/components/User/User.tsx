@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { server, useQuery } from "../../lib/api";
+import { server, useQuery, useMutation } from "../../lib/api";
 
 import {
   UserInfoData,
@@ -45,17 +45,20 @@ mutation addAnimes($id: ID!, $mal_id: Int!, $image: String!, $title: String!, $a
 export const User: FC<Props> = ({ title, children }) => {
   const { data, refetch, loading, error } = useQuery<UserInfoData>(USERINFO);
 
+  const [
+    deleteAnime,
+    { loading: deleteAnimeLoading, error: deleteAnimeError },
+  ] = useMutation<UserAnimeDeleteData, UserAnimeDeleteVariables>(
+    DELETEUSERANIME
+  );
+
+  const [
+    addAnime,
+    { loading: addAnimeLoading, error: addAnimeError },
+  ] = useMutation<UserAnimeAddData, UserAnimeAddVariables>(ADDUSERANIME);
+
   const deleteUserAnime = async (id: string, mal_id: number) => {
-    const { data } = await server.fetch<
-      UserAnimeDeleteData,
-      UserAnimeDeleteVariables
-    >({
-      query: DELETEUSERANIME,
-      variables: {
-        id,
-        mal_id,
-      },
-    });
+    await deleteAnime({ id, mal_id });
 
     refetch();
 
@@ -74,22 +77,16 @@ export const User: FC<Props> = ({ title, children }) => {
   };
 
   const addUserAnime = async () => {
-    const { data } = await server.fetch<
-      UserAnimeAddData,
-      UserAnimeAddVariables
-    >({
-      query: ADDUSERANIME,
-      variables: {
-        id: "5f569c5d69573b79b5db51ea",
-        mal_id: 200,
-        image: "Test",
-        title: "Test",
-        airing: false,
-        synopsis: "Test",
-        type: "Test",
-        episodes: 200,
-        rated: "Test",
-      },
+    await addAnime({
+      id: "5f569c5d69573b79b5db51ea",
+      mal_id: 200,
+      image: "Test",
+      title: "Test",
+      airing: false,
+      synopsis: "Test",
+      type: "Test",
+      episodes: 200,
+      rated: "Test",
     });
 
     const newAnime: Anime = {
@@ -143,10 +140,14 @@ export const User: FC<Props> = ({ title, children }) => {
   return (
     <div>
       {errorItem}
+      {deleteAnimeError && <h2>Error Deleting Weeb Anime</h2>}
+      {addAnimeError && <h2>Error Adding Weeb Anime</h2>}
       <h2>
         {title} {children}
       </h2>
       {loadingItem}
+      {deleteAnimeLoading && <h2>Deleting....</h2>}
+      {addAnimeLoading && <h2>Adding anime...</h2>}
       {userData}
       <button onClick={addUserAnime}> Add Anime </button>
     </div>
