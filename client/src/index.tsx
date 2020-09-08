@@ -1,14 +1,19 @@
 import React from "react";
 import { render } from "react-dom";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
 import { User } from "./components";
 import * as serviceWorker from "./serviceWorker";
 
+const client = new ApolloClient({
+  uri: "/api",
+});
+
 render(
-  <User title="Anime searching section">Weeb</User>,
-  document.getElementById("root"),
-  () => {
-    console.log("Re-rendered");
-  }
+  <ApolloProvider client={client}>
+    <User title="Anime searching section" />
+  </ApolloProvider>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
