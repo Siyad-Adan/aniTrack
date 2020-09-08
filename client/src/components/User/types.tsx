@@ -1,19 +1,22 @@
-interface Anime {
+export interface Anime {
   mal_id: number;
   title: string;
   synopsis: string;
   image: string;
   airing: boolean;
+  type: string;
+  episodes: number;
+  rated: string;
 }
 
-interface User {
+export interface UserInfo {
   id: string;
   username: string;
   animes: Anime[];
 }
 
 export interface UserInfoData {
-  userAnimes: User[];
+  userAnimes: UserInfo;
 }
 
 export interface UserAnimeDeleteData {
@@ -22,12 +25,13 @@ export interface UserAnimeDeleteData {
 
 export interface UserAnimeDeleteVariables {
   id: string;
+  mal_id: number;
 }
 
 export interface UserAnimeAddData {
   addAnime: number;
 }
 
-export interface UserAnimeAddVariables {
+export interface UserAnimeAddVariables extends Anime {
   id: string;
 }
