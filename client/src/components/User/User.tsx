@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "react-apollo";
 import { gql } from "apollo-boost";
 
 import {
-  UserAnimes_userAnimes as UserInfoData,
+  UserAnimes as UserInfoData,
   deleteUserAnime as UserAnimeDeleteData,
   deleteUserAnimeVariables as UserAnimeDeleteVariables,
   addAnimes as UserAnimeAddData,
@@ -127,17 +127,22 @@ export const User: FC<Props> = ({ title }) => {
     refetch();
   };
 
-  const userInfo = data ? data.username : null;
+  const userInfo = data ? data.userAnimes.username : null;
+  const userAnimes = data ? data.userAnimes.animes : null;
 
   const userData = userInfo ? (
     <div>
       <p>{userInfo}</p>
       <ul>
-        {data!.animes.map((anime, idx) => {
+        {userAnimes?.map((anime, idx) => {
           return (
             <li key={idx}>
               {anime!.synopsis}
-              <button onClick={() => deleteUserAnime(data!.id, anime!.mal_id)}>
+              <button
+                onClick={() =>
+                  deleteUserAnime(data!.userAnimes.id, anime!.mal_id)
+                }
+              >
                 Delete anime
               </button>
             </li>
